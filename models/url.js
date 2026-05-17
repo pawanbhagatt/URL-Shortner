@@ -10,10 +10,29 @@ const urlSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    visitHistory: [{ timestamp: {type: Number} }], 
-    }, 
-    { timestamps: true}
-);
+    userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    },
+    visitHistory: [
+        { 
+          timestamp: {type: Number},
+          ip: {type: String},
+          country: {type: String},
+          city: {type: String},
+        }
+    ],
+    expiresAt: {
+      type: Date,
+    },
+    clicks: {
+        type: Number,
+        default: 0,
+    },  
+},{ timestamps: true });
+
+urlSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 const URL = mongoose.model("url", urlSchema);
 
